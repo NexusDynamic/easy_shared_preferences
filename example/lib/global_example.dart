@@ -56,8 +56,8 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
         // Use global settings directly in theme configuration
-        brightness: GlobalSettings.getString('ui.theme') == 'dark' 
-            ? Brightness.dark 
+        brightness: GlobalSettings.getString('ui.theme') == 'dark'
+            ? Brightness.dark
             : Brightness.light,
       ),
       home: const HomePage(),
@@ -73,22 +73,21 @@ class HomePage extends StatefulWidget {
 }
 
 class HomePageState extends State<HomePage> {
-  
   @override
   void initState() {
     super.initState();
-    
+
     // Listen to changes in settings
     GlobalSettings.addChangeCallback((key, oldValue, newValue) {
       // Use debugPrint instead of print for better Flutter integration
       debugPrint('Setting changed: $key from $oldValue to $newValue');
-      
+
       // Rebuild UI when theme changes
       if (key == 'ui.theme') {
         setState(() {});
       }
     });
-    
+
     // Demonstrate adding a group after initialization
     _addNewFeatureGroup();
   }
@@ -96,7 +95,7 @@ class HomePageState extends State<HomePage> {
   Future<void> _addNewFeatureGroup() async {
     // Simulate adding a new feature after app startup
     await Future.delayed(Duration(seconds: 2));
-    
+
     try {
       await GlobalSettings.addGroup('newFeature', [
         BoolSetting(key: 'enabled', defaultValue: false),
@@ -113,8 +112,8 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Global Settings Demo'),
-        backgroundColor: GlobalSettings.getString('ui.theme') == 'dark' 
-            ? Colors.grey[800] 
+        backgroundColor: GlobalSettings.getString('ui.theme') == 'dark'
+            ? Colors.grey[800]
             : Colors.blue,
       ),
       body: Padding(
@@ -127,7 +126,7 @@ class HomePageState extends State<HomePage> {
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             SizedBox(height: 16),
-            
+
             // Sound toggle - access GlobalSettings directly
             SwitchListTile(
               title: Text('Sound Enabled'),
@@ -137,10 +136,11 @@ class HomePageState extends State<HomePage> {
                 setState(() {});
               },
             ),
-            
+
             // Volume slider
             ListTile(
-              title: Text('Volume: ${(GlobalSettings.getDouble('game.volume') * 100).round()}%'),
+              title: Text(
+                  'Volume: ${(GlobalSettings.getDouble('game.volume') * 100).round()}%'),
               subtitle: Slider(
                 value: GlobalSettings.getDouble('game.volume'),
                 onChanged: (value) async {
@@ -149,7 +149,7 @@ class HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            
+
             // Difficulty selector
             ListTile(
               title: Text('Difficulty'),
@@ -168,14 +168,14 @@ class HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            
+
             SizedBox(height: 24),
             Text(
               'UI Settings',
               style: Theme.of(context).textTheme.headlineSmall,
             ),
             SizedBox(height: 16),
-            
+
             // Theme selector
             ListTile(
               title: Text('Theme'),
@@ -194,7 +194,7 @@ class HomePageState extends State<HomePage> {
                 },
               ),
             ),
-            
+
             // Animation toggle
             SwitchListTile(
               title: Text('Show Animations'),
@@ -204,9 +204,9 @@ class HomePageState extends State<HomePage> {
                 setState(() {});
               },
             ),
-            
+
             SizedBox(height: 24),
-            
+
             // Action buttons
             Row(
               children: [
@@ -239,9 +239,9 @@ class HomePageState extends State<HomePage> {
                 ),
               ],
             ),
-            
+
             SizedBox(height: 24),
-            
+
             // Show new feature settings if available
             if (GlobalSettings.hasGroup('newFeature')) ...[
               Text(
@@ -263,7 +263,7 @@ class HomePageState extends State<HomePage> {
       ),
     );
   }
-  
+
   @override
   void dispose() {
     // Clean up when the app closes

@@ -51,9 +51,11 @@ abstract class SettingValidator<T> {
         if (map['min'] is int || map['max'] is int) {
           return RangeValidator<int>.fromMap(map) as SettingValidator<dynamic>;
         } else if (map['min'] is double || map['max'] is double) {
-          return RangeValidator<double>.fromMap(map) as SettingValidator<dynamic>;
+          return RangeValidator<double>.fromMap(map)
+              as SettingValidator<dynamic>;
         } else {
-          return RangeValidator<String>.fromMap(map) as SettingValidator<dynamic>;
+          return RangeValidator<String>.fromMap(map)
+              as SettingValidator<dynamic>;
         }
       case 'EnumValidator':
         return EnumValidator<dynamic>.fromMap(map);
@@ -669,11 +671,11 @@ class CommonValidators {
       RangeValidator<int>(min: 1, max: 65535);
 
   /// Validates that a string list is not empty.
-  static ListLengthValidator get nonEmptyList => 
+  static ListLengthValidator get nonEmptyList =>
       ListLengthValidator(minLength: 1);
 
   /// Validates that all strings in a list are non-empty.
-  static ListContentValidator get nonEmptyStrings => 
+  static ListContentValidator get nonEmptyStrings =>
       ListContentValidator(itemValidator: nonEmpty);
 
   /// Creates a validator for string lists with maximum length constraint.

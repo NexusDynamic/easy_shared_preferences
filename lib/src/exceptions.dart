@@ -123,16 +123,16 @@ class SettingsNotReadyException implements Exception {
 class SettingRecoveryException implements Exception {
   /// The setting key that failed recovery.
   final String settingKey;
-  
+
   /// The invalid value that was stored.
   final dynamic invalidValue;
-  
+
   /// The original validation error.
   final String validationError;
-  
+
   /// The recovery error that occurred.
   final dynamic recoveryError;
-  
+
   /// Descriptive error message.
   final String message;
 

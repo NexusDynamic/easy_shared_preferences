@@ -12,7 +12,7 @@ void main() async {
   // Initialize store and settings
   store = SettingsStore();
   settings = Settings(store: store);
-  
+
   // Define your settings groups with both function and class validators
   gameSettings = SettingsGroup(
     key: 'game',
@@ -88,16 +88,16 @@ class _SettingsDemoState extends State<SettingsDemo> {
   void initState() {
     super.initState();
     _loadSettings();
-    
+
     // Listen to changes
     gameSettings['soundEnabled']?.stream.listen((value) {
       setState(() => _soundEnabled = value);
     });
-    
+
     gameSettings['volume']?.stream.listen((value) {
       setState(() => _volume = value);
     });
-    
+
     uiSettings['theme']?.stream.listen((value) {
       setState(() => _theme = value);
     });
@@ -135,7 +135,7 @@ class _SettingsDemoState extends State<SettingsDemo> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Sound Enabled
             Card(
               color: _theme == 'dark' ? Colors.grey[800] : Colors.white,
@@ -149,7 +149,8 @@ class _SettingsDemoState extends State<SettingsDemo> {
                 subtitle: Text(
                   'Enable or disable game sounds',
                   style: TextStyle(
-                    color: _theme == 'dark' ? Colors.grey[300] : Colors.grey[600],
+                    color:
+                        _theme == 'dark' ? Colors.grey[300] : Colors.grey[600],
                   ),
                 ),
                 value: _soundEnabled,
@@ -158,7 +159,7 @@ class _SettingsDemoState extends State<SettingsDemo> {
                 },
               ),
             ),
-            
+
             // Volume
             Card(
               color: _theme == 'dark' ? Colors.grey[800] : Colors.white,
@@ -175,13 +176,15 @@ class _SettingsDemoState extends State<SettingsDemo> {
                   max: 1.0,
                   divisions: 10,
                   label: '${(_volume * 100).round()}%',
-                  onChanged: _soundEnabled ? (value) async {
-                    await settings.setDouble('game.volume', value);
-                  } : null,
+                  onChanged: _soundEnabled
+                      ? (value) async {
+                          await settings.setDouble('game.volume', value);
+                        }
+                      : null,
                 ),
               ),
             ),
-            
+
             // Difficulty
             Card(
               color: _theme == 'dark' ? Colors.grey[800] : Colors.white,
@@ -206,9 +209,9 @@ class _SettingsDemoState extends State<SettingsDemo> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             Text(
               'UI Settings',
               style: TextStyle(
@@ -218,7 +221,7 @@ class _SettingsDemoState extends State<SettingsDemo> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Theme
             Card(
               color: _theme == 'dark' ? Colors.grey[800] : Colors.white,
@@ -231,12 +234,14 @@ class _SettingsDemoState extends State<SettingsDemo> {
                 ),
                 subtitle: DropdownButton<String>(
                   value: _theme,
-                  dropdownColor: _theme == 'dark' ? Colors.grey[800] : Colors.white,
+                  dropdownColor:
+                      _theme == 'dark' ? Colors.grey[800] : Colors.white,
                   items: ['light', 'dark', 'auto'].map((theme) {
                     return DropdownMenuItem(
                       value: theme,
                       child: Text(
-                        theme.substring(0, 1).toUpperCase() + theme.substring(1),
+                        theme.substring(0, 1).toUpperCase() +
+                            theme.substring(1),
                         style: TextStyle(
                           color: _theme == 'dark' ? Colors.white : Colors.black,
                         ),
@@ -251,7 +256,7 @@ class _SettingsDemoState extends State<SettingsDemo> {
                 ),
               ),
             ),
-            
+
             // Notifications
             Card(
               color: _theme == 'dark' ? Colors.grey[800] : Colors.white,
@@ -265,7 +270,8 @@ class _SettingsDemoState extends State<SettingsDemo> {
                 subtitle: Text(
                   'Enable push notifications',
                   style: TextStyle(
-                    color: _theme == 'dark' ? Colors.grey[300] : Colors.grey[600],
+                    color:
+                        _theme == 'dark' ? Colors.grey[300] : Colors.grey[600],
                   ),
                 ),
                 value: _notifications,
@@ -275,9 +281,9 @@ class _SettingsDemoState extends State<SettingsDemo> {
                 },
               ),
             ),
-            
+
             const SizedBox(height: 32),
-            
+
             // Reset buttons
             Row(
               children: [

@@ -269,39 +269,44 @@ class SettingsGroup extends UnmodifiableMapBase<String, Setting> {
               if (!validationResult.isValid) {
                 _logger.warning(
                     'Validation failed for stored value in $storageKey: ${validationResult.errorDescription}');
-                
+
                 // Attempt recovery using the error handler
                 try {
                   final recoveredValue = setting.attemptRecovery(
-                    currentValue, 
+                    currentValue,
                     validationResult.errorDescription!,
                   );
-                  
+
                   if (recoveredValue != null) {
-                    _logger.info('Successfully recovered invalid value for $storageKey, using recovered value');
-                    await _set(storageKey, setting, recoveredValue, force: true);
+                    _logger.info(
+                        'Successfully recovered invalid value for $storageKey, using recovered value');
+                    await _set(storageKey, setting, recoveredValue,
+                        force: true);
                   } else {
-                    _logger.info('No recovery possible for $storageKey, using default value');
-                    await _set(storageKey, setting, null, force: true); // null -> uses default
+                    _logger.info(
+                        'No recovery possible for $storageKey, using default value');
+                    await _set(storageKey, setting, null,
+                        force: true); // null -> uses default
                   }
                 } catch (recoveryError) {
                   _logger.severe(
                       'Recovery failed for $storageKey, using default value: $recoveryError');
-                  await _set(storageKey, setting, null, force: true); // null -> uses default
+                  await _set(storageKey, setting, null,
+                      force: true); // null -> uses default
                 }
               } else {
                 _logger.fine(
                     'Successfully validated existing value for: $storageKey');
               }
             } else {
-              _logger.fine(
-                  'No validation required for: $storageKey');
+              _logger.fine('No validation required for: $storageKey');
             }
           } catch (e) {
             // If there's an error reading the current value, use default
             _logger.warning(
                 'Error reading stored value for $storageKey, using default value: $e');
-            await _set(storageKey, setting, null, force: true); // null -> uses default
+            await _set(storageKey, setting, null,
+                force: true); // null -> uses default
           }
         }
       }

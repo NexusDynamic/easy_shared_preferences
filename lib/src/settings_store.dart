@@ -70,56 +70,58 @@ class SettingsStore {
     final useRegularSharedPreferences =
         forceRegularSharedPreferences || kDebugMode;
 
-    _logger.info('Initializing SettingsStore (regular: $useRegularSharedPreferences)');
+    _logger.info(
+        'Initializing SettingsStore (regular: $useRegularSharedPreferences)');
 
     if (useRegularSharedPreferences) {
       _isUsingCache = false;
       _logger.fine('Using regular SharedPreferences');
-      SharedPreferences.getInstance()
-          .then((prefs) {
-            _prefs = prefs;
-            _ready = true;
-            _logger.info('SettingsStore initialized successfully with regular SharedPreferences');
-            completer.complete(true);
-          })
-          .catchError((error) {
-            _ready = false;
-            _logger.severe('Failed to initialize SharedPreferences', error);
-            completer.completeError(error);
-            throw Exception('Failed to initialize SharedPreferences: $error');
-          });
+      SharedPreferences.getInstance().then((prefs) {
+        _prefs = prefs;
+        _ready = true;
+        _logger.info(
+            'SettingsStore initialized successfully with regular SharedPreferences');
+        completer.complete(true);
+      }).catchError((error) {
+        _ready = false;
+        _logger.severe('Failed to initialize SharedPreferences', error);
+        completer.completeError(error);
+        throw Exception('Failed to initialize SharedPreferences: $error');
+      });
     } else {
       _isUsingCache = true;
       _logger.fine('Attempting to use SharedPreferencesWithCache');
       SharedPreferencesWithCache.create(
-            cacheOptions: const SharedPreferencesWithCacheOptions(),
-          )
-          .then((prefs) {
-            _prefs = prefs;
-            _ready = true;
-            _logger.info('SettingsStore initialized successfully with SharedPreferencesWithCache');
-            completer.complete(true);
-          })
-          .catchError((error) {
-            // If SharedPreferencesWithCache fails, fall back to regular SharedPreferences
-            _logger.warning('SharedPreferencesWithCache failed, falling back to regular SharedPreferences', error);
-            _isUsingCache = false;
-            SharedPreferences.getInstance()
-                .then((fallbackPrefs) {
-                  _prefs = fallbackPrefs;
-                  _ready = true;
-                  _logger.info('SettingsStore initialized successfully with fallback SharedPreferences');
-                  completer.complete(true);
-                })
-                .catchError((fallbackError) {
-                  _ready = false;
-                  _logger.severe('Failed to initialize any SharedPreferences implementation', fallbackError);
-                  completer.completeError(fallbackError);
-                  throw Exception(
-                    'Failed to initialize any SharedPreferences: $fallbackError',
-                  );
-                });
-          });
+        cacheOptions: const SharedPreferencesWithCacheOptions(),
+      ).then((prefs) {
+        _prefs = prefs;
+        _ready = true;
+        _logger.info(
+            'SettingsStore initialized successfully with SharedPreferencesWithCache');
+        completer.complete(true);
+      }).catchError((error) {
+        // If SharedPreferencesWithCache fails, fall back to regular SharedPreferences
+        _logger.warning(
+            'SharedPreferencesWithCache failed, falling back to regular SharedPreferences',
+            error);
+        _isUsingCache = false;
+        SharedPreferences.getInstance().then((fallbackPrefs) {
+          _prefs = fallbackPrefs;
+          _ready = true;
+          _logger.info(
+              'SettingsStore initialized successfully with fallback SharedPreferences');
+          completer.complete(true);
+        }).catchError((fallbackError) {
+          _ready = false;
+          _logger.severe(
+              'Failed to initialize any SharedPreferences implementation',
+              fallbackError);
+          completer.completeError(fallbackError);
+          throw Exception(
+            'Failed to initialize any SharedPreferences: $fallbackError',
+          );
+        });
+      });
     }
   }
 
@@ -135,16 +137,17 @@ class SettingsStore {
   /// Throws: SettingsNotReadyException if accessed before initialization completes.
   dynamic get prefs {
     if (!_ready) {
-      _logger.warning('Attempted to access prefs before SettingsStore was ready');
+      _logger
+          .warning('Attempted to access prefs before SettingsStore was ready');
       throw SettingsNotReadyException(
         'SettingsStore is not ready. Please await readyFuture first.',
       );
     }
     return _prefs;
   }
-  
+
   /// Disposes of the store and releases resources.
-  /// 
+  ///
   /// This should be called when the store is no longer needed to prevent
   /// memory leaks. After calling dispose, the store should not be used.
   void dispose() {
