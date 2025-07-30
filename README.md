@@ -1,6 +1,8 @@
 # Easy Shared Preferences
 
 [![Pub Publisher](https://img.shields.io/pub/publisher/easy_shared_preferences?style=flat-square)](https://pub.dev/publishers/zeyus.com/packages) [![Pub Version](https://img.shields.io/pub/v/easy_shared_preferences)](https://pub.dev/packages/easy_shared_preferences) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Build Status](https://github.com/NexusDynamic/easy_shared_preferences/workflows/test-esp/badge.svg)](https://github.com/NexusDynamic/easy_shared_preferences/actions)
+
 
 A game or app settings oriented wrapper API for [shared_preferences](https://pub.dev/packages/shared_preferences) (with cache), type-safe settings framework for Flutter applications with automatic validation, change notifications, and modular design.
 
