@@ -10,7 +10,7 @@ void main() async {
   // Initialize settings
   WidgetsFlutterBinding.ensureInitialized();
   final store = SettingsStore();
-  final settings = Settings(store: store);
+  final settings = EasySettings(store: store);
 
   final gameSettings = SettingsGroup(
     key: 'game',

@@ -4,14 +4,14 @@ import 'package:easy_shared_preferences/easy_shared_preferences.dart';
 late SettingsStore store;
 late SettingsGroup gameSettings;
 late SettingsGroup uiSettings;
-late Settings settings;
+late EasySettings settings;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Initialize store and settings
   store = SettingsStore();
-  settings = Settings(store: store);
+  settings = EasySettings(store: store);
 
   // Define your settings groups with both function and class validators
   gameSettings = SettingsGroup(

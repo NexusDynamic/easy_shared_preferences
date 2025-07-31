@@ -4,15 +4,15 @@ import 'package:easy_shared_preferences/easy_shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  
+
   group('New Features Tests', () {
-    late Settings settings;
+    late EasySettings settings;
     late SettingsStore store;
-    
+
     setUp(() async {
       SharedPreferences.setMockInitialValues({});
       store = SettingsStore(forceRegularSharedPreferences: true);
-      settings = Settings(store: store);
+      settings = EasySettings(store: store);
     });
 
     tearDown(() async {
@@ -36,11 +36,14 @@ void main() {
         await settings.init();
 
         // Test default value
-        expect(settings.getStringList('tags.userTags'), equals(['flutter', 'dart']));
+        expect(settings.getStringList('tags.userTags'),
+            equals(['flutter', 'dart']));
 
         // Test setting new value
-        await settings.setStringList('tags.userTags', ['javascript', 'typescript', 'node']);
-        expect(settings.getStringList('tags.userTags'), equals(['javascript', 'typescript', 'node']));
+        await settings.setStringList(
+            'tags.userTags', ['javascript', 'typescript', 'node']);
+        expect(settings.getStringList('tags.userTags'),
+            equals(['javascript', 'typescript', 'node']));
 
         // Test empty list
         await settings.setStringList('tags.userTags', []);
@@ -63,13 +66,15 @@ void main() {
         await settings.init();
 
         // Valid: within range
-        await settings.setStringList('categories.selected', ['tech', 'science']);
-        expect(settings.getStringList('categories.selected'), equals(['tech', 'science']));
+        await settings
+            .setStringList('categories.selected', ['tech', 'science']);
+        expect(settings.getStringList('categories.selected'),
+            equals(['tech', 'science']));
 
         // Invalid: too many items
         expect(
-          () => settings.setStringList('categories.selected', 
-            ['a', 'b', 'c', 'd', 'e', 'f']), // 6 items, max is 5
+          () => settings.setStringList('categories.selected',
+              ['a', 'b', 'c', 'd', 'e', 'f']), // 6 items, max is 5
           throwsA(isA<SettingValidationException>()),
         );
 
@@ -80,7 +85,8 @@ void main() {
         );
       });
 
-      test('should validate string list content with ListContentValidator', () async {
+      test('should validate string list content with ListContentValidator',
+          () async {
         final emailsGroup = SettingsGroup.forTesting(
           key: 'contacts',
           items: [
@@ -98,15 +104,15 @@ void main() {
         await settings.init();
 
         // Valid: all emails are valid
-        await settings.setStringList('contacts.emails', 
-          ['test@example.com', 'user@domain.org']);
-        expect(settings.getStringList('contacts.emails'), 
-          equals(['test@example.com', 'user@domain.org']));
+        await settings.setStringList(
+            'contacts.emails', ['test@example.com', 'user@domain.org']);
+        expect(settings.getStringList('contacts.emails'),
+            equals(['test@example.com', 'user@domain.org']));
 
         // Invalid: one email is invalid
         expect(
-          () => settings.setStringList('contacts.emails', 
-            ['valid@email.com', 'invalid-email']),
+          () => settings.setStringList(
+              'contacts.emails', ['valid@email.com', 'invalid-email']),
           throwsA(isA<SettingValidationException>()),
         );
       });
@@ -158,18 +164,22 @@ void main() {
         ]);
 
         // Test getting and setting through GlobalSettings
-        expect(GlobalSettings.getStringList('global_tags.favorites'), equals(['default']));
-        
-        await GlobalSettings.setStringList('global_tags.favorites', ['flutter', 'dart', 'web']);
-        expect(GlobalSettings.getStringList('global_tags.favorites'), 
-          equals(['flutter', 'dart', 'web']));
+        expect(GlobalSettings.getStringList('global_tags.favorites'),
+            equals(['default']));
+
+        await GlobalSettings.setStringList(
+            'global_tags.favorites', ['flutter', 'dart', 'web']);
+        expect(GlobalSettings.getStringList('global_tags.favorites'),
+            equals(['flutter', 'dart', 'web']));
 
         GlobalSettings.dispose();
       });
     });
 
     group('Validation Error Recovery', () {
-      test('should use recovery handler when validation fails during initialization', () async {
+      test(
+          'should use recovery handler when validation fails during initialization',
+          () async {
         final logsGroup = SettingsGroup.forTesting(
           key: 'logs',
           items: [
@@ -207,7 +217,8 @@ void main() {
             StringSetting(
               key: 'mode',
               defaultValue: 'production',
-              validator: EnumValidator<String>(['development', 'staging', 'production']),
+              validator: EnumValidator<String>(
+                  ['development', 'staging', 'production']),
               onValidationError: (key, invalidValue, error) {
                 // Always return null to use default
                 return null;
@@ -227,7 +238,8 @@ void main() {
         expect(settings.getString('test.mode'), equals('production'));
       });
 
-      test('should fall back to default when recovery also fails validation', () async {
+      test('should fall back to default when recovery also fails validation',
+          () async {
         final badRecoveryGroup = SettingsGroup.forTesting(
           key: 'bad',
           items: [
@@ -251,7 +263,7 @@ void main() {
 
         // Should complete successfully but fall back to default value
         await settings.init();
-        
+
         // Should use default value since recovery failed
         expect(settings.getInt('bad.value'), equals(50));
       });
@@ -301,7 +313,8 @@ void main() {
         }
       });
 
-      test('should handle validation errors gracefully in SettingsGroup', () async {
+      test('should handle validation errors gracefully in SettingsGroup',
+          () async {
         final emailGroup = SettingsGroup.forTesting(
           key: 'email_test',
           items: [
@@ -321,7 +334,8 @@ void main() {
         await settings.init();
 
         // Should fall back to default value since no recovery handler
-        expect(settings.getString('email_test.address'), equals('default@example.com'));
+        expect(settings.getString('email_test.address'),
+            equals('default@example.com'));
       });
     });
 
@@ -335,7 +349,7 @@ void main() {
         // Stream controller should not be created yet
         expect(lazySetting.toString(), isNotNull); // Just access something
 
-        // First access to stream should create controller  
+        // First access to stream should create controller
         final stream = lazySetting.stream;
         expect(stream, isA<Stream<bool>>());
 
@@ -355,7 +369,7 @@ void main() {
 
         // Change value without accessing stream first
         await settings.setBool('lazy_test.flag', true);
-        
+
         // This should not throw or cause issues
         expect(settings.getBool('lazy_test.flag'), isTrue);
       });
@@ -429,10 +443,12 @@ void main() {
         await settings.init();
 
         // Test valid operations
-        await settings.setStringList('complex.tags', ['flutter', 'dart', 'mobile']);
+        await settings
+            .setStringList('complex.tags', ['flutter', 'dart', 'mobile']);
         await settings.setDouble('complex.score', 0.85);
 
-        expect(settings.getStringList('complex.tags'), equals(['flutter', 'dart', 'mobile']));
+        expect(settings.getStringList('complex.tags'),
+            equals(['flutter', 'dart', 'mobile']));
         expect(settings.getDouble('complex.score'), equals(0.85));
 
         // Test stream notifications
@@ -451,7 +467,11 @@ void main() {
 
         await Future.delayed(Duration(milliseconds: 10));
 
-        expect(tagEvents, equals([['updated']]));
+        expect(
+            tagEvents,
+            equals([
+              ['updated']
+            ]));
         expect(scoreEvents, equals([0.95]));
 
         await tagSub.cancel();

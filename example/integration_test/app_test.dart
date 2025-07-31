@@ -8,12 +8,12 @@ void main() {
 
   group('Easy Shared Preferences Integration Tests', () {
     late SettingsStore store;
-    late Settings settings;
+    late EasySettings settings;
 
     setUp(() async {
       // Initialize store and settings for each test
       store = SettingsStore();
-      settings = Settings(store: store);
+      settings = EasySettings(store: store);
 
       // Clear any existing data
       await store.readyFuture;
@@ -63,7 +63,7 @@ void main() {
       settings.dispose();
 
       final newStore = SettingsStore();
-      final newSettings = Settings(store: newStore);
+      final newSettings = EasySettings(store: newStore);
       final newTestGroup = SettingsGroup(
         key: 'integration_test',
         items: [

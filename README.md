@@ -251,7 +251,7 @@ void main() {
     late Settings settings;
     
     setUp(() {
-      settings = Settings();
+      settings = EasySettings();
       settings.register(SettingsGroup.forTesting(
         key: 'test',
         items: [
@@ -282,7 +282,7 @@ void main() {
 
 ### Main API
 
-- `Settings()`: Main settings manager
+- `EasySettings()`: Main settings manager
 - `SettingsGroup()`: Container for related settings
 - `settings.register()`: Register a settings group
 - `settings.init()`: Initialize the settings system

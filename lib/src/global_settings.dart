@@ -59,10 +59,10 @@ class GroupConfig {
 /// Helper class that eliminates duplication by providing a single method
 /// to check initialization and delegate to the underlying instance.
 class _GlobalSettingsDelegate {
-  static Settings? _instance;
+  static EasySettings? _instance;
 
   /// Get the instance and ensure it's initialized
-  static Settings get instance {
+  static EasySettings get instance {
     if (_instance == null) {
       throw StateError(
           'GlobalSettings has not been initialized. Call GlobalSettings.initialize() first.');
@@ -71,7 +71,7 @@ class _GlobalSettingsDelegate {
   }
 
   /// Set the instance (internal use only)
-  static void _setInstance(Settings? instance) {
+  static void _setInstance(EasySettings? instance) {
     _instance = instance;
   }
 }
@@ -123,10 +123,10 @@ class GlobalSettings {
     _logger
         .info('Initializing GlobalSettings with ${groupConfigs.length} groups');
 
-    Settings? tempInstance;
+    EasySettings? tempInstance;
     try {
       final settingsStore = store ?? SettingsStore();
-      tempInstance = Settings(store: settingsStore);
+      tempInstance = EasySettings(store: settingsStore);
 
       // Create and register all groups
       for (final config in groupConfigs) {
@@ -207,7 +207,7 @@ class GlobalSettings {
   /// Most users should use the convenience methods instead.
   ///
   /// Throws [StateError] if not initialized.
-  static Settings get instance => _GlobalSettingsDelegate.instance;
+  static EasySettings get instance => _GlobalSettingsDelegate.instance;
 
   /// Dispose the global settings and cleanup all resources.
   ///

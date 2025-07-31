@@ -4,7 +4,7 @@ import 'package:easy_shared_preferences/easy_shared_preferences.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
-  
+
   group('GlobalSettings Tests', () {
     setUp(() async {
       SharedPreferences.setMockInitialValues({});
@@ -118,7 +118,8 @@ void main() {
         GlobalSettings.dispose();
 
         expect(() => GlobalSettings.getBool('app.darkMode'), throwsStateError);
-        expect(() => GlobalSettings.setBool('app.darkMode', true), throwsA(isA<StateError>()));
+        expect(() => GlobalSettings.setBool('app.darkMode', true),
+            throwsA(isA<StateError>()));
       });
     });
 
@@ -186,7 +187,7 @@ void main() {
 
       test('should call change callbacks', () async {
         final changeEvents = <Map<String, dynamic>>[];
-        
+
         GlobalSettings.addChangeCallback((key, oldValue, newValue) {
           changeEvents.add({
             'key': key,
@@ -205,7 +206,7 @@ void main() {
 
       test('should remove change callbacks', () async {
         final changeEvents = <Map<String, dynamic>>[];
-        
+
         void callback(String key, dynamic oldValue, dynamic newValue) {
           changeEvents.add({
             'key': key,
@@ -290,7 +291,7 @@ void main() {
         await GlobalSettings.initialize(groups);
 
         final instance = GlobalSettings.instance;
-        expect(instance, isA<Settings>());
+        expect(instance, isA<EasySettings>());
         expect(instance.getBool('test.flag'), isFalse);
       });
 

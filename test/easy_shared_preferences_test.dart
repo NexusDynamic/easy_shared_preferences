@@ -5,11 +5,11 @@ import 'package:easy_shared_preferences/easy_shared_preferences.dart';
 void main() {
   // Set up Flutter test environment
   TestWidgetsFlutterBinding.ensureInitialized();
-  
+
   group('Settings Framework Tests', () {
-    late Settings appSettings;
+    late EasySettings appSettings;
     late SettingsStore store;
-    
+
     setUp(() async {
       // Clear SharedPreferences before each test using the simpler mock approach
       // This is compatible with both SharedPreferences and SharedPreferencesWithCache
@@ -17,7 +17,7 @@ void main() {
 
       // Create fresh instances for each test
       store = SettingsStore(forceRegularSharedPreferences: true);
-      appSettings = Settings(store: store);
+      appSettings = EasySettings(store: store);
     });
 
     tearDown(() async {
@@ -560,8 +560,8 @@ void main() {
 
         // Create new Settings instance and store for second initialization
         final newStore = SettingsStore(forceRegularSharedPreferences: true);
-        final newSettings = Settings(store: newStore);
-        
+        final newSettings = EasySettings(store: newStore);
+
         // Second initialization with same structure
         final settings2 = SettingsGroup.forTesting(
           key: 'persist-test',
@@ -969,8 +969,8 @@ void main() {
 
         // Create new Settings instance and store
         final newStore = SettingsStore(forceRegularSharedPreferences: true);
-        final newSettings = Settings(store: newStore);
-        
+        final newSettings = EasySettings(store: newStore);
+
         // Create new instance with same key structure
         final settings2 = SettingsGroup.forTesting(
           key: 'persist',
@@ -986,7 +986,7 @@ void main() {
         // Values should be persisted
         expect(newSettings.getBool('persist.flag'), isTrue);
         expect(newSettings.getString('persist.text'), equals('persisted'));
-        
+
         // Clean up
         newSettings.dispose();
       });
@@ -1006,8 +1006,8 @@ void main() {
 
         // Create new Settings instance and store
         final newStore = SettingsStore(forceRegularSharedPreferences: true);
-        final newSettings = Settings(store: newStore);
-        
+        final newSettings = EasySettings(store: newStore);
+
         // Create expanded settings with new setting
         final expandedSettings = SettingsGroup.forTesting(
           key: 'expand',
@@ -1025,7 +1025,7 @@ void main() {
 
         // New setting should use default
         expect(newSettings.getInt('expand.newSetting'), equals(42));
-        
+
         // Clean up
         newSettings.dispose();
       });

@@ -7,7 +7,7 @@ import 'typed_setting_access.dart';
 
 /// Settings manager providing centralized access to all setting groups.
 ///
-/// The [Settings] class serves as the main entry point for the settings framework,
+/// The [EasySettings] class serves as the main entry point for the settings framework,
 /// offering instance methods for registration, initialization, and access to settings
 /// across your entire application. It manages multiple [SettingsGroup] instances and
 /// provides both individual and batch operations with proper resource management.
@@ -16,7 +16,7 @@ import 'typed_setting_access.dart';
 ///
 /// The settings framework follows a hierarchical structure:
 /// ```
-/// Settings (Global Manager)
+/// EasySettings (Manager)
 /// │
 /// ├── SettingsGroup (Group: "game")
 /// │   ├── BoolSetting ("soundEnabled")
@@ -92,7 +92,7 @@ import 'typed_setting_access.dart';
 ///
 /// This prevents key conflicts between different setting groups and provides
 /// logical organization of related settings.
-class Settings with TypedSettingAccess {
+class EasySettings with TypedSettingAccess {
   static final _logger = EspLogger.forComponent('Settings');
 
   /// The settings store instance used by this manager.
@@ -121,7 +121,7 @@ class Settings with TypedSettingAccess {
   ///
   /// Parameters:
   /// - [store]: The SettingsStore to use for persistence. If not provided, creates a new one.
-  Settings({SettingsStore? store}) : _store = store ?? SettingsStore() {
+  EasySettings({SettingsStore? store}) : _store = store ?? SettingsStore() {
     _logger.info('Creating Settings manager');
   }
 
