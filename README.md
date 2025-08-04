@@ -97,7 +97,7 @@ void main() async {
   
   // Create the settings store and manager
   final store = SettingsStore();
-  final settings = Settings(store: store);
+  final settings = EasySettings(store: store);
   
   // Define your settings groups
   final gameSettings = SettingsGroup(
@@ -248,7 +248,7 @@ The framework includes built-in testing support:
 ```dart
 void main() {
   group('Settings Tests', () {
-    late Settings settings;
+    late EasySettings settings;
     
     setUp(() {
       settings = EasySettings();
