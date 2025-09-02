@@ -28,22 +28,19 @@
 library;
 
 import 'dart:async';
-import 'settings_manager.dart';
-import 'settings_group.dart';
-import 'settings_store.dart';
-import 'setting.dart';
-import 'logger.dart';
+import 'dart:convert';
+import 'package:easy_shared_preferences/easy_shared_preferences.dart';
 
 /// Configuration for a settings group used in GlobalSettings initialization.
 ///
 /// This class holds the key and items for a settings group without requiring
 /// a store instance, which will be provided by GlobalSettings.
-class GroupConfig {
+class GroupConfig implements Serializable {
   /// The unique key for the settings group.
   final String key;
 
   /// The list of settings to include in the group.
-  final List<Setting> items;
+  final Iterable<Setting> items;
 
   /// Creates a new group configuration.
   ///
@@ -54,6 +51,41 @@ class GroupConfig {
     required this.key,
     required this.items,
   });
+
+  @override
+  Map<String, dynamic> toMap() {
+    return {
+      'key': key,
+      'items': items.map((item) => item.toMap()).toList(),
+    };
+  }
+
+  @override
+  String toJson() {
+    final map = toMap();
+    return jsonEncode(map);
+  }
+
+  /// Creates a group configuration from a map representation.
+  factory GroupConfig.fromMap(Map<String, dynamic> map) {
+    return GroupConfig(
+      key: map['key'] as String,
+      items: (map['items'] as List<dynamic>)
+          .map((item) => SettingFactory.fromMap(item as Map<String, dynamic>))
+          .toList(),
+    );
+  }
+
+  /// Creates a group configuration from a JSON string representation.
+  factory GroupConfig.fromJson(String json) {
+    final map = jsonDecode(json) as Map<String, dynamic>;
+    return GroupConfig.fromMap(map);
+  }
+
+  @override
+  String toString() {
+    return 'GroupConfig(key: $key, items: ${items.length})';
+  }
 }
 
 /// Helper class that eliminates duplication by providing a single method

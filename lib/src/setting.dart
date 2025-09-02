@@ -415,7 +415,22 @@ class BoolSetting extends Setting<bool> {
     return defaultValue.toString();
   }
 
+  /// Creates a boolean setting from a map representation.
+  factory BoolSetting.fromMap(Map<String, dynamic> map) {
+    return BoolSetting(
+      key: map['key'] as String,
+      defaultValue: map['defaultValue'] as bool,
+      userConfigurable: map['userConfigurable'] as bool? ?? true,
+      validator: null, // Todo: implement validator deserialization
+      onValidationError: null, // Handlers cannot be serialized
+    );
+  }
+
   /// Creates a boolean setting from a JSON string representation.
+  factory BoolSetting.fromJson(String json) {
+    final map = jsonDecode(json) as Map<String, dynamic>;
+    return BoolSetting.fromMap(map);
+  }
 }
 
 /// A setting that stores integer numeric values.
@@ -452,6 +467,23 @@ class IntSetting extends Setting<int> {
     super.validator,
     super.onValidationError,
   }) : super(type: SettingType.int);
+
+  /// Creates an integer setting from a map representation.
+  factory IntSetting.fromMap(Map<String, dynamic> map) {
+    return IntSetting(
+      key: map['key'] as String,
+      defaultValue: map['defaultValue'] as int,
+      userConfigurable: map['userConfigurable'] as bool? ?? true,
+      validator: null, // Todo: implement validator deserialization
+      onValidationError: null, // Handlers cannot be serialized
+    );
+  }
+
+  /// Creates an integer setting from a JSON string representation.
+  factory IntSetting.fromJson(String json) {
+    final map = jsonDecode(json) as Map<String, dynamic>;
+    return IntSetting.fromMap(map);
+  }
 }
 
 /// A setting that stores double-precision floating-point values.
@@ -488,6 +520,23 @@ class DoubleSetting extends Setting<double> {
     super.validator,
     super.onValidationError,
   }) : super(type: SettingType.double);
+
+  /// Creates a double setting from a map representation.
+  factory DoubleSetting.fromMap(Map<String, dynamic> map) {
+    return DoubleSetting(
+      key: map['key'] as String,
+      defaultValue: map['defaultValue'] as double,
+      userConfigurable: map['userConfigurable'] as bool? ?? true,
+      validator: null, // Todo: implement validator deserialization
+      onValidationError: null, // Handlers cannot be serialized
+    );
+  }
+
+  /// Creates a double setting from a JSON string representation.
+  factory DoubleSetting.fromJson(String json) {
+    final map = jsonDecode(json) as Map<String, dynamic>;
+    return DoubleSetting.fromMap(map);
+  }
 }
 
 /// A setting that stores string text values.
@@ -524,6 +573,23 @@ class StringSetting extends Setting<String> {
     super.validator,
     super.onValidationError,
   }) : super(type: SettingType.string);
+
+  /// Creates a string setting from a map representation.
+  factory StringSetting.fromMap(Map<String, dynamic> map) {
+    return StringSetting(
+      key: map['key'] as String,
+      defaultValue: map['defaultValue'] as String,
+      userConfigurable: map['userConfigurable'] as bool? ?? true,
+      validator: null, // Todo: implement validator deserialization
+      onValidationError: null, // Handlers cannot be serialized
+    );
+  }
+
+  /// Creates a string setting from a JSON string representation.
+  factory StringSetting.fromJson(String json) {
+    final map = jsonDecode(json) as Map<String, dynamic>;
+    return StringSetting.fromMap(map);
+  }
 }
 
 /// A setting that stores lists of string values.
@@ -560,6 +626,23 @@ class StringListSetting extends Setting<List<String>> {
     super.validator,
     super.onValidationError,
   }) : super(type: SettingType.stringList);
+
+  /// Creates a string list setting from a map representation.
+  factory StringListSetting.fromMap(Map<String, dynamic> map) {
+    return StringListSetting(
+      key: map['key'] as String,
+      defaultValue: List<String>.from(map['defaultValue'] as List),
+      userConfigurable: map['userConfigurable'] as bool? ?? true,
+      validator: null, // Todo: implement validator deserialization
+      onValidationError: null, // Handlers cannot be serialized
+    );
+  }
+
+  /// Creates a string list setting from a JSON string representation.
+  factory StringListSetting.fromJson(String json) {
+    final map = jsonDecode(json) as Map<String, dynamic>;
+    return StringListSetting.fromMap(map);
+  }
 }
 
 /// Represents the result of a validation operation.
@@ -589,5 +672,29 @@ class ValidationResult<T> {
     return isValid
         ? 'ValidationResult(valid: $value)'
         : 'ValidationResult(invalid: $value, error: $errorDescription)';
+  }
+}
+
+class SettingFactory {
+  /// Creates a Setting instance from a map or JSON representation.
+  static Setting fromMap(Map<String, dynamic> map) {
+    final typeString = map['type'] as String;
+    final type = SettingType.values.firstWhere(
+      (e) => e.name == typeString,
+      orElse: () => throw ArgumentError('Invalid setting type: $typeString'),
+    );
+
+    switch (type) {
+      case SettingType.bool:
+        return BoolSetting.fromMap(map);
+      case SettingType.int:
+        return IntSetting.fromMap(map);
+      case SettingType.double:
+        return DoubleSetting.fromMap(map);
+      case SettingType.string:
+        return StringSetting.fromMap(map);
+      case SettingType.stringList:
+        return StringListSetting.fromMap(map);
+    }
   }
 }

@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:async';
 import 'dart:collection';
+import 'package:easy_shared_preferences/src/global_settings.dart';
 import 'package:logging/logging.dart';
 
 import 'exceptions.dart';
@@ -639,5 +641,110 @@ class SettingsGroup extends UnmodifiableMapBase<String, Setting> {
 
     _ready = false;
     _logger.fine('SettingsGroup disposed: $key');
+  }
+
+  Map<String, dynamic> toMap() {
+    final map = <String, dynamic>{};
+    for (final setting in items) {
+      map[setting.key] = _get(setting);
+    }
+    return map;
+  }
+
+  /// Creates a JSON string representation of this settings group.
+  String toJson() {
+    final map = toMap();
+    return jsonEncode(map);
+  }
+
+  /// Creates a settings group from a Map representation.
+  /// Note: This does not initialize the settings in storage.
+  /// You must call _init() manually after creating the group.
+  static SettingsGroup fromMap({
+    required String key,
+    required Map<String, dynamic> map,
+    required SettingsStore store,
+    Duration operationTimeout = const Duration(seconds: 30),
+  }) {
+    final items = <Setting>[];
+    map.forEach((settingKey, value) {
+      if (value is bool) {
+        items.add(BoolSetting(key: settingKey, defaultValue: value));
+      } else if (value is int) {
+        items.add(IntSetting(key: settingKey, defaultValue: value));
+      } else if (value is double) {
+        items.add(DoubleSetting(key: settingKey, defaultValue: value));
+      } else if (value is String) {
+        items.add(StringSetting(key: settingKey, defaultValue: value));
+      } else if (value is List<String>) {
+        items.add(StringListSetting(key: settingKey, defaultValue: value));
+      } else {
+        throw ArgumentError(
+            'Unsupported setting type for key: $settingKey, value: $value');
+      }
+    });
+    return SettingsGroup(
+      key: key,
+      items: items,
+      store: store,
+      operationTimeout: operationTimeout,
+    );
+  }
+
+  /// Creates a settings group from a JSON string representation.
+  /// Note: This does not initialize the settings in storage.
+  /// You must call _init() manually after creating the group.
+  static SettingsGroup fromJson({
+    required String key,
+    required String json,
+    required SettingsStore store,
+    Duration operationTimeout = const Duration(seconds: 30),
+  }) {
+    final map = jsonDecode(json) as Map<String, dynamic>;
+    return fromMap(
+      key: key,
+      map: map,
+      store: store,
+      operationTimeout: operationTimeout,
+    );
+  }
+
+  /// updates the settings in this group from a Map representation.
+  /// Only updates settings that already exist in this group.
+  /// Does not add new settings or remove existing ones.
+  Future<void> updateFromMap(Map<String, dynamic> map) async {
+    await _waitUntilReady();
+    for (final entry in map.entries) {
+      final setting = this[entry.key];
+      if (setting != null) {
+        await setValue(entry.key, entry.value);
+      } else {
+        _logger.warning(
+            'Attempted to update non-existent setting: ${entry.key} in group: $key');
+      }
+    }
+  }
+
+  /// Returns a string representation of this settings group.
+  @override
+  String toString() {
+    return 'SettingsGroup($key, items: ${items.length}, ready: $_ready)';
+  }
+
+  /// Converts this SettingsGroup to a GroupConfig for serialization or re-initialization.
+  GroupConfig toConfig() {
+    return GroupConfig(key: key, items: items);
+  }
+
+  /// Converts this SettingsGroup to a JSON string representation of its configuration.
+  String toConfigJson() {
+    final config = toConfig();
+    return config.toJson();
+  }
+
+  /// Converts this SettingsGroup to a Map representation of its configuration.
+  Map<String, dynamic> toConfigMap() {
+    final config = toConfig();
+    return config.toMap();
   }
 }
