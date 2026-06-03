@@ -1,18 +1,18 @@
 name: easy_shared_preferences
 description: A flexible, hierarchical wrapper for flutter's shared_preferences package.
-version: 1.1.1
+version: 1.1.2
 homepage: https://github.com/NexusDynamic/easy_shared_preferences
 repository: https://github.com/NexusDynamic/easy_shared_preferences
 issue_tracker: https://github.com/NexusDynamic/easy_shared_preferences/issues
 
 environment:
   sdk: ^3.0.0
-  flutter: '>=3.0.0'
+  flutter: ">=3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.5.3
+  shared_preferences: ^2.5.5
   logging: ^1.3.0
 
 dev_dependencies:

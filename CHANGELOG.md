@@ -1,3 +1,11 @@
+## 1.1.2
+
+* Migrated exmaple away from KGP
+* Updated `build.gradle.kts` to use `JvmTarget.JVM_17`
+* Updated gradle wrapper to `9.1.0`
+* Updated `shared_preferences` to `^2.5.5`
+* Updated IOS example
+
 ## 1.1.1
 
 Added `fromJson` and `fromMap` factory constructors to `Setting`, `SettingsGroup` and `GroupConfig` classes for easier deserialization from JSON strings.
